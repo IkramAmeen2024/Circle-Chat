@@ -8,35 +8,30 @@
 </head>
 
 <body>
-  <!-- AUTH & CHAT UI এখানে থাকবে, যেমন তুমি আগের কোডে দিয়েছো -->
+ <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-  <!-- Firebase initialize script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-    import { getDatabase } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAYzqIG7q96EtvrOngIc33MLdSdflXa6uU",
+    authDomain: "circlechat1.firebaseapp.com",
+    databaseURL: "https://circlechat1-default-rtdb.firebaseio.com",
+    projectId: "circlechat1",
+    storageBucket: "circlechat1.firebasestorage.app",
+    messagingSenderId: "851643015494",
+    appId: "1:851643015494:web:b433b7acfe15a8d0be8547",
+    measurementId: "G-9WEQ25WEHD"
+  };
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAYzqIG7q96EtvrOngIc33MLdSdflXa6uU",
-      authDomain: "circlechat1.firebaseapp.com",
-      databaseURL: "https://circlechat1-default-rtdb.firebaseio.com",
-      projectId: "circlechat1",
-      storageBucket: "circlechat1.firebasestorage.app",
-      messagingSenderId: "851643015494",
-      appId: "1:851643015494:web:b433b7acfe15a8d0be8547",
-      measurementId: "G-9WEQ25WEHD"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // Make globally accessible so app.js can use
-    window.firebaseApp = app;
-    window.auth = auth;
-    window.db = db;
-  </script>
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 
   <!-- App script -->
   <script type="module" src="app.js"></script>
@@ -230,6 +225,7 @@
   </div>
 </body>
 </html>
+
 
 
 
