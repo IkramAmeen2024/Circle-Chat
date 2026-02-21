@@ -22,29 +22,21 @@
      }
    }
 */
+// app.js
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import {
-  getAuth,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import {
-  getDatabase,
-  ref,
-  push,
-  set,
-  onValue,
-  onChildAdded,
-  query,
-  limitToLast,
-  serverTimestamp,
-  onDisconnect,
-  remove
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+// Firebase already window এ initialize করা আছে
+const auth = window.auth;
+const db = window.db;
+
+// তারপর আগের auth + chat logic এখানে ব্যবহার করো
+// Example:
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("User signed in:", user.email);
+  } else {
+    console.log("No user signed in");
+  }
+});
 
 /* ----------------------------- Firebase Setup ----------------------------- */
 
@@ -595,3 +587,4 @@ function humanizeAuthError(err) {
 
 setAuthTab("login");
 setStatus("Not connected", true);
+
