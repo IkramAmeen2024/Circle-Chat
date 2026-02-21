@@ -1,46 +1,203 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Circle Chat</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
+  <div class="appShell">
+    <header class="topBar">
+      <div class="brand">
+        <div class="brandMark" aria-hidden="true"></div>
+        <div class="brandText">
+          <h1>Circle Chat</h1>
+          <p class="muted">Private rooms • Realtime • Dark mode</p>
+        </div>
+      </div>
 
-<div class="container">
+      <div class="topBarRight">
+        <div id="userBadge" class="userBadge hidden">
+          <div class="userDot" aria-hidden="true"></div>
+          <div class="userMeta">
+            <div id="userName" class="userName">—</div>
+            <div id="userEmail" class="userEmail muted">—</div>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn btnGhost hidden" type="button">Log out</button>
+      </div>
+    </header>
 
-  <!-- Login -->
-  <div id="authSection">
-    <h2>Circle Chat</h2>
-    <input type="email" id="email" placeholder="Email"/>
-    <input type="password" id="password" placeholder="Password"/>
-    <button onclick="register()">Register</button>
-    <button onclick="login()">Login</button>
+    <!-- AUTH VIEW -->
+    <main id="authView" class="mainGrid">
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>Welcome</h2>
+          <p class="muted">Sign in or create an account to start chatting.</p>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Authentication">
+          <button id="tabLogin" class="tab active" type="button" role="tab" aria-selected="true">Login</button>
+          <button id="tabRegister" class="tab" type="button" role="tab" aria-selected="false">Register</button>
+        </div>
+
+        <!-- Login -->
+        <form id="loginForm" class="form">
+          <label class="field">
+            <span>Email</span>
+            <input id="loginEmail" type="email" autocomplete="email" required placeholder="you@example.com" />
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••" />
+          </label>
+
+          <button class="btn btnPrimary" type="submit">Login</button>
+          <p id="loginError" class="formError" aria-live="polite"></p>
+        </form>
+
+        <!-- Register -->
+        <form id="registerForm" class="form hidden">
+          <label class="field">
+            <span>Username</span>
+            <input id="registerUsername" type="text" required minlength="2" maxlength="24" placeholder="e.g. Alex" />
+          </label>
+
+          <label class="field">
+            <span>Email</span>
+            <input id="registerEmail" type="email" autocomplete="email" required placeholder="you@example.com" />
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <input id="registerPassword" type="password" autocomplete="new-password" required minlength="6" placeholder="At least 6 characters" />
+          </label>
+
+          <button class="btn btnPrimary" type="submit">Create account</button>
+          <p id="registerError" class="formError" aria-live="polite"></p>
+        </form>
+
+        <div class="panelFooter muted">
+          <p>
+            Deploy-ready for GitHub Pages / Firebase Hosting.
+            <br />
+            Uses Firebase Auth + Realtime Database.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel panelRight">
+        <div class="panelHeader">
+          <h2>How it works</h2>
+          <ul class="bullet muted">
+            <li>Create or join a room with a code.</li>
+            <li>Messages update instantly for everyone in the room.</li>
+            <li>Typing indicator shows when others are composing.</li>
+          </ul>
+        </div>
+
+        <div class="codeCard">
+          <div class="codeTitle">Firebase Realtime Database Rules (required)</div>
+          <pre class="codeBlock"><code>{
+  "rules": {
+    "rooms": {
+      "$room": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+  }
+}</code></pre>
+          <p class="muted small">
+            For stronger “private rooms”, implement per-room membership rules. This app uses shared room codes.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- CHAT VIEW -->
+    <main id="chatView" class="chatLayout hidden">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="card">
+          <h3>Rooms</h3>
+          <p class="muted small">Create a new room or join one with a code.</p>
+
+          <div class="row">
+            <input id="roomInput" class="input" type="text" placeholder="Room code (e.g. blue-fox)" maxlength="48" />
+            <button id="joinRoomBtn" class="btn btnPrimary" type="button">Join</button>
+          </div>
+
+          <div class="row">
+            <button id="createRoomBtn" class="btn btnGhost" type="button">Create new room</button>
+            <button id="copyRoomBtn" class="btn btnGhost" type="button" disabled>Copy code</button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="metaList">
+            <div class="metaItem">
+              <span class="muted small">Current room</span>
+              <span id="currentRoomLabel" class="mono">—</span>
+            </div>
+            <div class="metaItem">
+              <span class="muted small">Status</span>
+              <span id="statusLabel" class="muted">Not connected</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card smallCard">
+          <h3>Tips</h3>
+          <ul class="bullet muted small">
+            <li>Press <span class="kbd">Enter</span> to send (Shift+Enter for newline).</li>
+            <li>Share the room code to invite others.</li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Chat -->
+      <section class="chatPanel">
+        <div class="chatHeader">
+          <div>
+            <div class="chatTitle">Room: <span id="roomTitle" class="mono">—</span></div>
+            <div id="typingIndicator" class="typing muted small" aria-live="polite"></div>
+          </div>
+
+          <div class="chatHeaderRight">
+            <button id="scrollToBottomBtn" class="btn btnGhost hidden" type="button">Newest</button>
+          </div>
+        </div>
+
+        <div id="messages" class="messages" aria-live="polite" aria-label="Messages"></div>
+
+        <form id="messageForm" class="composer">
+          <textarea
+            id="messageInput"
+            class="composerInput"
+            placeholder="Write a message…"
+            rows="1"
+            maxlength="2000"
+            disabled
+          ></textarea>
+          <button id="sendBtn" class="btn btnPrimary" type="submit" disabled>Send</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer muted small">
+      <span>Circle Chat</span>
+      <span class="dotSep">•</span>
+      <span>Realtime Database</span>
+      <span class="dotSep">•</span>
+      <span>Dark UI</span>
+    </footer>
   </div>
 
-  <!-- Chat -->
-  <div id="chatSection" class="hidden">
-    <div class="topbar">
-      <input type="text" id="roomInput" placeholder="Enter Room Name"/>
-      <button onclick="joinRoom()">Join</button>
-      <button onclick="logout()">Logout</button>
-    </div>
-
-    <div id="chatBox"></div>
-
-    <div class="inputArea">
-      <input type="text" id="messageInput" placeholder="Type message..."/>
-      <button onclick="sendMessage()">Send</button>
-    </div>
-  </div>
-
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="app.js"></script>
-
+  <!-- App script -->
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
