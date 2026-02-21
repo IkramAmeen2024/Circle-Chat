@@ -8,6 +8,38 @@
 </head>
 
 <body>
+  <!-- AUTH & CHAT UI এখানে থাকবে, যেমন তুমি আগের কোডে দিয়েছো -->
+
+  <!-- Firebase initialize script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { getDatabase } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYzqIG7q96EtvrOngIc33MLdSdflXa6uU",
+      authDomain: "circlechat1.firebaseapp.com",
+      databaseURL: "https://circlechat1-default-rtdb.firebaseio.com",
+      projectId: "circlechat1",
+      storageBucket: "circlechat1.firebasestorage.app",
+      messagingSenderId: "851643015494",
+      appId: "1:851643015494:web:b433b7acfe15a8d0be8547",
+      measurementId: "G-9WEQ25WEHD"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    // Make globally accessible so app.js can use
+    window.firebaseApp = app;
+    window.auth = auth;
+    window.db = db;
+  </script>
+
+  <!-- App script -->
+  <script type="module" src="app.js"></script>
   <div class="appShell">
     <header class="topBar">
       <div class="brand">
@@ -196,39 +228,9 @@
       <span>Dark UI</span>
     </footer>
   </div>
-
- 
-  <script type="module">
-  // Firebase core + Auth + Database
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-  import { getDatabase } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
-
-  // Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyAYzqIG7q96EtvrOngIc33MLdSdflXa6uU",
-    authDomain: "circlechat1.firebaseapp.com",
-    databaseURL: "https://circlechat1-default-rtdb.firebaseio.com",
-    projectId: "circlechat1",
-    storageBucket: "circlechat1.firebasestorage.app",
-    messagingSenderId: "851643015494",
-    appId: "1:851643015494:web:b433b7acfe15a8d0be8547",
-    measurementId: "G-9WEQ25WEHD"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-
-  // Initialize Auth & Database (v12 compatible)
-  const auth = getAuth(app);
-  const db = getDatabase(app);
-
-  // এখন তোমার app.js ফাংশনগুলোতে auth এবং db ব্যবহার করতে পারব
-   </script>
-   <!-- App script -->
- <script type="module" src="app.js"></script>
 </body>
 </html>
+
 
 
 
